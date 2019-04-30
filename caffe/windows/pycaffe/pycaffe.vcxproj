@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{38B6CE09-4B1A-4E72-A547-8A3299D8DA60}</ProjectGuid>
+    <RootNamespace>pycaffe</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="Exists('$(SolutionDir)\CommonSettings.props')">
+    <Import Project="..\CommonSettings.props" />
+  </ImportGroup>
+  <PropertyGroup>
+    <TargetExt>.pyd</TargetExt>
+    <TargetName>_caffe</TargetName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(PythonDir)\Lib\site-packages\numpy\core\include\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <AdditionalDependencies>libcaffe.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;cudart.lib;cublas.lib;curand.lib;libprotobuf.lib;hdf5_tools.lib;hdf5_hl_fortran.lib;hdf5_fortran.lib;hdf5_hl_f90cstub.lib;hdf5_f90cstub.lib;hdf5_cpp.lib;hdf5_hl_cpp.lib;hdf5_hl.lib;hdf5.lib;zlib.lib;szip.lib;opencv_world310.lib;shlwapi.lib;leveldb.lib;cublas_device.lib;cuda.lib;libglog.lib;lmdb.lib;cudnn.lib;libgflags.lib;python27.lib;libopenblas.dll.a;mklml.lib;libiomp5md.lib;$(CudaDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalDependencies>libcaffe.lib;$(CudaDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <PropertyGroup Label="UserMacros">
+    <ProtocDir>G:\caffe\caffe-windows\caffe-windows_v2_copy\3rdparty\bin</ProtocDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <DisableSpecificWarnings>4003</DisableSpecificWarnings>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MinimalRebuild>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\Anaconda\include;$(ProjectDir)\..\..\3rdparty\include;$(ProjectDir)\..\..\include\;$(ProjectDir)\..\..\src\;G:\caffe\caffe-windows\caffe-windows_vs2015\3rdparty\mkl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</MultiProcessorCompilation>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>"$(ScriptsDir)\PythonPostBuild.cmd" "$(SolutionDir)" "$(OutDir)"</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\..\..\Build\x64\Release;E:\Anaconda\libs;$(ProjectDir)\..\..\3rdparty\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\python\caffe\_caffe.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libcaffe\libcaffe.vcxproj">
+      <Project>{a9acef83-7b63-4574-a554-89ce869ea141}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(SolutionDir)\CommonSettings.targets" />
+  <!-- Build this project only if Python support is enabled in CommonSettings.props -->
+  <PropertyGroup>
+    <OriginalBuildTargets>$(BuildDependsOn)</OriginalBuildTargets>
+    <BuildDependsOn>OriginalBuild;SkipBuild</BuildDependsOn>
+    <NuGetPackageImportStamp>ce4167c6</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <Target Name="OriginalBuild" Condition="'$(PythonSupport)'=='true'" DependsOnTargets="$(OriginalBuildTargets)" />
+  <Target Name="SkipBuild" Condition="'$(PythonSupport)'!='true'">
+    <Message Text="Skipping project $(ProjectName), Python support is not enabled in CommonSettings.props." Importance="High" />
+  </Target>
+</Project>

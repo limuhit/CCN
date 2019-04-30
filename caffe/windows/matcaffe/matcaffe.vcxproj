@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7173D611-3A7A-4F07-943A-727C6862E8D5}</ProjectGuid>
+    <RootNamespace>matcaffe</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="Exists('$(SolutionDir)\CommonSettings.props')">
+    <Import Project="..\CommonSettings.props" />
+  </ImportGroup>
+  <PropertyGroup>
+    <TargetExt>.mexw64</TargetExt>
+    <TargetName>caffe_</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <AdditionalDependencies>libcaffe.lib;libmx.lib;libmex.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;cudart.lib;cublas.lib;curand.lib;libprotobuf.lib;hdf5_tools.lib;hdf5_hl_fortran.lib;hdf5_fortran.lib;hdf5_hl_f90cstub.lib;hdf5_f90cstub.lib;hdf5_cpp.lib;hdf5_hl_cpp.lib;hdf5_hl.lib;hdf5.lib;zlib.lib;szip.lib;opencv_world310.lib;shlwapi.lib;leveldb.lib;cublas_device.lib;cuda.lib;libglog.lib;lmdb.lib;cudnn.lib;libgflags.lib;libopenblas.dll.a;$(CudaDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalDependencies>libcaffe.lib;libmx.lib;libmex.lib;libboost_system-vc140-mt-1_61.lib;libboost_thread-vc140-mt-1_61.lib;libboost_chrono-vc140-mt-1_61.lib;libboost_date_time-vc140-mt-1_61.lib;libboost_filesystem-vc140-mt-1_61.lib;$(CudaDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <DisableSpecificWarnings>4003</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">G:\caffe\caffe-windows\caffe-windows_vs2015\3rdparty\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">G:\caffe\caffe-windows\caffe-windows_vs2015\3rdparty\include;E:\Program Files\MATLAB\R2015b\extern\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>"$(ScriptsDir)\MatlabPreBuild.cmd" "$(SolutionDir)" "$(OutDir)"</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>"$(ScriptsDir)\MatlabPostBuild.cmd" "$(SolutionDir)" "$(OutDir)"</Command>
+    </PostBuildEvent>
+    <Link>
+      <ModuleDefinitionFile>matcaffe.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">G:\caffe\caffe-windows\caffe-windows_vs2015\3rdparty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">G:\caffe\caffe-windows\caffe-windows_vs2015\3rdparty\lib;E:\Program Files\MATLAB\R2015b\extern\lib\win64\microsoft;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\lib\x64;$(ProjectDir)\..\..\Build\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\matlab\+caffe\private\caffe_.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libcaffe\libcaffe.vcxproj">
+      <Project>{a9acef83-7b63-4574-a554-89ce869ea141}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="matcaffe.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(SolutionDir)\CommonSettings.targets" />
+  <!-- Build this project only if Matlab support is enabled in CommonSettings.props -->
+  <PropertyGroup>
+    <OriginalBuildTargets>$(BuildDependsOn)</OriginalBuildTargets>
+    <BuildDependsOn>OriginalBuild;SkipBuild</BuildDependsOn>
+    <NuGetPackageImportStamp>5d60c5dd</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <Target Name="OriginalBuild" Condition="'$(MatlabSupport)'=='true'" DependsOnTargets="$(OriginalBuildTargets)" />
+  <Target Name="SkipBuild" Condition="'$(MatlabSupport)'!='true'">
+    <Message Text="Skipping project $(ProjectName), Matlab support is not enabled in CommonSettings.props." Importance="High" />
+  </Target>
+</Project>
