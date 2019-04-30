@@ -1,0 +1,15 @@
+net: "./model/lossless_gmm_8.prototxt"
+test_iter: 24
+test_interval: 500
+base_lr: 0.0001
+momentum: 0.9
+momentum2: 0.999
+lr_policy: "multistep"
+gamma: 0.1
+stepvalue: 120000
+stepvalue: 240000
+display: 100
+max_iter: 160000
+snapshot: 10000
+snapshot_prefix: "./model/save/ls_8"
+solver_mode: GPU
