@@ -1,0 +1,4 @@
+﻿  python.cpp
+e:\boost\include\boost\python\detail\caller.hpp(55): warning C4244: “return”: 从“Py_ssize_t”转换到“unsigned int”，可能丢失数据
+  Coder.vcxproj -> E:\projects\Coder\x64\Debug\Coder.pyd
+  Coder.vcxproj -> E:\projects\Coder\x64\Debug\Coder.pdb (Full PDB)
