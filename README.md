@@ -58,7 +58,16 @@ layer {
   
 In the folder of "cmp", we provide the scripts to train and test the model for lossy image compression. And the pretrained models are available for testing. For training the model, you should train a base model with "train_base.py" and a corresponding GMM entropy model for the base model to make sure the GMM entopy model fulfil with the base model. Then, initialize the whole model with the base model and GMM entropy model, end-to-end train the model with teh "train_gmm.py".  To generate the bit stream, we adopt a post process step. Generating discrete probability for entropy coding from a GMM distribution is complex and the head and tail effect should be considered in application. To make it easy, we retrain a model similar as shown Fig. 5 in the paper and combine it with the arithmetic coding  to generate the bit stream. 
 
-In the folder of "binary", the codes can be directly runed on windows is given. Make sure the windows has a Nvidia graphic card and the CUDA installed. We provide four models with two optimized with MSE and two optimized with MS-SSIM. Run python scae.py -h for moe instruction to encode the image to bit stream and decode the image from the bit stream. 
+In the folder of "binary", the codes can be directly runed on windows is given. Make sure the windows has a Nvidia graphic card and the CUDA installed. We provide 6 models with 3 optimized with MSE and 3 optimized with MS-SSIM. Run python scae.py -h for moe instruction to encode the image to bit stream and decode the image from the bit stream. 
+
+examples:
+
+python .\scae.py -i test.png -o test.data -s test.shape -e -gpu 0 -q 0  
+python .\scae.py -i test.data -o test_out.png -s test.shape -d -gpu 0
+
+If your get picture with only one color, please try another time. 
 
 If you want to use the codes in your further work, please cite our paper as follows:
+
+
 
