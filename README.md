@@ -23,37 +23,37 @@ layer {
 }  
   
 layer {   
-    name: "conv2"  
-    type: "Convolution"  
-    bottom: "conv1"  
-    top: "conv2"  
-    convolution_param {  
-      num_output: 24  
-      pad: 2  
-      kernel_size: 5  
-      stride: 1  
-      constrain: 6  
-      group_in: 3  
-      group_out: 3  
-    }  
+  &nbsp;&nbsp;  name: "conv2"  
+  &nbsp;&nbsp;  type: "Convolution"  
+  &nbsp;&nbsp;  bottom: "conv1"  
+  &nbsp;&nbsp;  top: "conv2"  
+  &nbsp;&nbsp;  convolution_param {  
+  &nbsp;&nbsp;&nbsp;&nbsp;    num_output: 24  
+  &nbsp;&nbsp;&nbsp;&nbsp;    pad: 2  
+  &nbsp;&nbsp;&nbsp;&nbsp;    kernel_size: 5  
+  &nbsp;&nbsp;&nbsp;&nbsp;    stride: 1  
+  &nbsp;&nbsp;&nbsp;&nbsp;    constrain: 6  
+  &nbsp;&nbsp;&nbsp;&nbsp;    group_in: 3  
+  &nbsp;&nbsp;&nbsp;&nbsp;    group_out: 3  
+  &nbsp;&nbsp;  }  
 }  
   
 In testing, we rewrite the the convolution operation for sub-block by sub-block parallel decoding. The application can be find at "decoder_conv3_layer.cpp" and "decoder_conv3_layer.cu".  "Decoder_conv3_layer.cpp" depends on the MKL libary for parallel computation which can be complied successfully under windows. For linux user, you may delete the application in "decoder_conv3_layer.cpp" and leave the functions empty to remove the MKL library. The following is an template for it. 
 
 layer {  
-  name: "conv1"  
-  type: "DecoderConv3"  
-  bottom: "data"  
-  top: "conv1"  
-  convolution_param {  
-    num_output: 24  
-    pad: 2  
-    kernel_size: 5  
-    stride: 1  
-    constrain: 5  
-    group_in: 1  
-    group_out: 3  
-  }  
+ &nbsp;&nbsp; name: "conv1"  
+ &nbsp;&nbsp; type: "DecoderConv3"  
+ &nbsp;&nbsp; bottom: "data"  
+ &nbsp;&nbsp; top: "conv1"  
+ &nbsp;&nbsp; convolution_param {  
+ &nbsp;&nbsp;&nbsp;&nbsp;   num_output: 24  
+ &nbsp;&nbsp;&nbsp;&nbsp;   pad: 2  
+ &nbsp;&nbsp;&nbsp;&nbsp;   kernel_size: 5  
+ &nbsp;&nbsp;&nbsp;&nbsp;   stride: 1  
+ &nbsp;&nbsp;&nbsp;&nbsp;   constrain: 5  
+ &nbsp;&nbsp;&nbsp;&nbsp;   group_in: 1  
+ &nbsp;&nbsp;&nbsp;&nbsp;   group_out: 3  
+ &nbsp;&nbsp; }  
 }  
   
 In the folder of "cmp", we provide the scripts to train and test the model for lossy image compression. And the pretrained models are available for testing. For training the model, you should train a base model with "train_base.py" and a corresponding GMM entropy model for the base model to make sure the GMM entopy model fulfil with the base model. Then, initialize the whole model with the base model and GMM entropy model, end-to-end train the model with teh "train_gmm.py".  To generate the bit stream, we adopt a post process step. Generating discrete probability for entropy coding from a GMM distribution is complex and the head and tail effect should be considered in application. To make it easy, we retrain a model similar as shown Fig. 5 in the paper and combine it with the arithmetic coding  to generate the bit stream. 
