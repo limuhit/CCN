@@ -1,4 +1,4 @@
-This is the codes for the paper "Deep Context-Aware Entropy Model for Image Compression" available at https://arxiv.org/abs/1906.10057.
+This is the codes for the paper "Efficient and Effective Context-Based Convolutional Entropy Modeling for Image Compression" available at https://arxiv.org/abs/1906.10057.
 
 The caffe contains the source codes for Context-Based Convolutional Networks. 
 
