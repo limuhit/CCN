@@ -70,12 +70,12 @@ If your get picture with only one color, please try another time.
 If you want to use the codes in your further work, please cite our paper as follows:
 
 @article{li2020efficient,
-  title={Efficient and Effective Context-Based Convolutional Entropy Modeling for Image Compression},
-  author={Li, Mu and Ma, Kede and You, Jane and Zhang, David and Zuo, Wangmeng},
-  journal={IEEE Transactions on Image Processing},
-  volume={29},
-  pages={5900--5911},
-  year={2020},
-  publisher={IEEE}
+&nbsp;&nbsp;  title={Efficient and Effective Context-Based Convolutional Entropy Modeling for Image Compression},
+&nbsp;&nbsp;  author={Li, Mu and Ma, Kede and You, Jane and Zhang, David and Zuo, Wangmeng},
+&nbsp;&nbsp;  journal={IEEE Transactions on Image Processing},
+&nbsp;&nbsp;  volume={29},
+&nbsp;&nbsp;  pages={5900--5911},
+&nbsp;&nbsp;  year={2020},
+&nbsp;&nbsp;  publisher={IEEE}
 }
 
