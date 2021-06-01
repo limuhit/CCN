@@ -1,9 +1,10 @@
+import os
+os.environ['GLOG_minloglevel'] = "1" # suprress Caffe verbose prints
+import caffe
 import argparse
 import Coder
-import caffe
 import numpy as np
 import cv2
-import os
 import time          
 import struct
 def encoding(net,file_name='test.data'):
