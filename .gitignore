@@ -1,0 +1,10 @@
+build/
+coder.egg-info/
+muli.egg-info/
+.vscode
+.git
+.idea
+*.jpg
+*.txt
+*.png
+*.egg
