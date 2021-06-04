@@ -192,7 +192,7 @@ class Net(nn.Module):
         super(Net, self).__init__()
         self.model = load_dicts(net_type, code_channels)
         self.concat_dic = {}
-        self.path = 'g:/caffe_to_torch/'
+        self.path = 'G:/caffe_to_torch/'
         self.nt = net_type
         self.prex = prex
         self.code_channels = code_channels
@@ -280,6 +280,7 @@ class EntEncoder(nn.Module):
             tx = self.ext_data(x)
             pred,num = self.net(tx)
             tlabel = self.ext_label(x)
+            pred, tlabel = pred.type(torch.int32).to('cpu'), tlabel.type(torch.int32).to('cpu')
             self.mcoder.encodes(pred,8,tlabel,int(num[0].item()))
         self.mcoder.end_encoder()
     
@@ -303,6 +304,7 @@ class EntDecoder(nn.Module):
         self.mcoder.start_decoder()
         for _ in range(self.code_channels+h+w-2):
             pred,num,rdata = self.net(pout)
+            pred = pred.type(torch.int32).to('cpu')
             pout = self.mcoder.decodes(pred,8,int(num[0].item())).to(device).view(n,1,h,w).contiguous()
         rdata[:,-1,-1,-1] = pout[:,0,0,0]
         return rdata
@@ -374,6 +376,7 @@ def decoding(code_name, model_idx=0, prex='mse'):
         dimg = dimg.astype(np.uint8)
         cv2.imshow('dimg',dimg)
         cv2.waitKey()
+
 
 if __name__ == '__main__':
     img_name = 'H:/image_test_set/kodak/2.png'

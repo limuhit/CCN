@@ -20,31 +20,43 @@ uint32_t my_decoder(Coder * coder, at::Tensor data_obj, int tncode, int tsum) {
 	return res;
 }
 void my_encoder2(Coder * coder, at::Tensor data_obj, int tncode,at::Tensor symbol_obj, int num) {
-	uint32_t* table = static_cast<uint32_t *>(data_obj.to(torch::kCPU).to(torch::kInt32).data_ptr());
-	uint32_t* label = static_cast<uint32_t *>(symbol_obj.to(torch::kCPU).to(torch::kInt32).data_ptr());
+	int* table = data_obj.data_ptr<int>();
+	int* label = symbol_obj.data_ptr<int>();
 	int i = 0;
-	//std::cout << tncode;
+	//std::cout << tncode<<std::endl;
 	uint32_t ncode = static_cast<uint32_t>(tncode); 
-
+	uint32_t* ntable = new uint32_t[ncode+1];
 	for (int i = 0; i<num; i++) {
-		coder->encode(table+i*(tncode+1), ncode,table[i*(tncode+1)+tncode], label[i]);
-		//for(int j =0; j<tncode+1;j++){std::cout<<table[i*(tncode + 1) + j]<<" ";}
+		
+		for(int j =0; j<tncode+1;j++){
+			ntable[j] = static_cast<uint32_t>(table[i*(tncode + 1) + j]);
+			//std::cout<<table[i*(tncode + 1) + j]<<" ";
+		}
+		coder->encode(ntable, ncode, ntable[ncode], static_cast<uint32_t>(label[i]));
 		//std::cout<<"label:"<<label[i]<<std::endl;
 		//std::cout << i << ":" << table[i*(tncode + 1) + tncode] << ":" << label[i] << std::endl;
 	}
+	delete[] ntable;
 }
 at::Tensor my_decoder2(Coder * coder, at::Tensor data_obj, int tncode, int num) {
-	uint32_t* table = static_cast<uint32_t *>(data_obj.to(torch::kCPU).to(torch::kInt32).data_ptr());
+	int* table = data_obj.data_ptr<int>();
+	//uint32_t* table = static_cast<uint32_t *>(data_obj.to(torch::kCPU).to(torch::kInt32).data_ptr());
 	auto option = data_obj.options().device(torch::kCPU).dtype(torch::kFloat32);
 	at::Tensor symbol_obj = torch::empty({data_obj.size(0)},option);
 	float* label = symbol_obj.data<float>();
 	uint32_t ncode = static_cast<uint32_t>(tncode);
+	uint32_t* ntable = new uint32_t[ncode+1];
 	//std::cout << "sizeof float" << sizeof(float) << std::endl;
 	//std::cout << "decoding";
 	for (int i = 0; i<num;i++) {
-		label[i] = static_cast<float>(coder->decode(table + i*(tncode + 1), ncode, table[i*(tncode + 1) + tncode]));
+		for(int j =0; j<tncode+1;j++){
+			ntable[j] = static_cast<uint32_t>(table[i*(tncode + 1) + j]);
+			//std::cout<<table[i*(tncode + 1) + j]<<" ";
+		}
+		label[i] = static_cast<float>(coder->decode(ntable, ncode, ntable[ncode]));
 		//printf("decoding %dth symbol, it is %f\n", i, label[i]);
 	}
+	delete[] ntable;
 	return symbol_obj;
 }
 namespace py = pybind11;
